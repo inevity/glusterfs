@@ -104,6 +104,8 @@ AC_CONFIG_FILES([Makefile
                 xlators/performance/decompounder/Makefile
                 xlators/performance/decompounder/src/Makefile
                 xlators/debug/Makefile
+                xlators/debug/sink/Makefile
+                xlators/debug/sink/src/Makefile
                 xlators/debug/trace/Makefile
                 xlators/debug/trace/src/Makefile
                 xlators/debug/error-gen/Makefile
