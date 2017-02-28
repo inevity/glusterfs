@@ -302,7 +302,7 @@ glusterd_tierdsvc_start (glusterd_svc_t *svc, int flags)
         }
         runinit (&runner);
 
-        if (priv->valgrind) {
+        if (this->ctx->cmd_args.valgrind) {
                 snprintf (valgrind_logfile, PATH_MAX, "%s/valgrind-tierd.log",
                           svc->proc.logdir);
 
