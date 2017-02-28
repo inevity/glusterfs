@@ -173,7 +173,6 @@ typedef struct {
                                                  * transaction ids */
 
         struct cds_list_head       mount_specs;
-        gf_boolean_t               valgrind;
         pthread_t                  brick_thread;
         void                      *hooks_priv;
 
