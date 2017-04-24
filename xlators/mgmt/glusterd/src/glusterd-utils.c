@@ -2150,6 +2150,9 @@ glusterd_volume_stop_glusterfs (glusterd_volinfo_t *volinfo,
         if (del_brick)
                 glusterd_delete_brick (volinfo, brickinfo);
 
+        GLUSTERD_GET_BRICK_PIDFILE (pidfile, volinfo, brickinfo, conf);
+        gf_msg_debug (this->name,  0, "Unlinking pidfile %s", pidfile);
+        (void) sys_unlink (pidfile);
 out:
         return ret;
 }
