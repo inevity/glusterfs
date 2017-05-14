@@ -272,11 +272,12 @@ AC_ARG_ENABLE([debug],
                              [Enable debug build options.]))
 if test "x$enable_debug" = "xyes"; then
         BUILD_DEBUG=yes
-        CFLAGS="${CFLAGS} -g -O0 -DDEBUG"
+        CFLAGS="${CFLAGS} -g -rdynamic -O0 -DDEBUG"
 else
         BUILD_DEBUG=no
-        CFLAGS="${CFLAGS} -g -O2"
+        CFLAGS="${CFLAGS} -g -rdynamic"
 fi
+
 
 case $host_os in
   darwin*)
