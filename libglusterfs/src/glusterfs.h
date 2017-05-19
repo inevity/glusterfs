@@ -509,6 +509,8 @@ struct _glusterfs_ctx {
 
         struct tvec_base *timer_wheel; /* global timer-wheel instance */
 
+
+        gf_lock_t           volfile_lock;
 };
 typedef struct _glusterfs_ctx glusterfs_ctx_t;
 
