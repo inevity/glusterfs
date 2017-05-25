@@ -1968,7 +1968,7 @@ notify (xlator_t *this, int32_t event, void *data, ...)
                 case GF_EVENT_POLLERR:
                         break;
 
-                case GF_EVENT_TRANSPORT_CLEANUP:
+                case GF_EVENT_CLEANUP:
                         break;
 
                 default:

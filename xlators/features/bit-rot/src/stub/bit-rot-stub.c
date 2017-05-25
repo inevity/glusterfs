@@ -10,6 +10,7 @@
 
 #include <ctype.h>
 #include <sys/uio.h>
+#include <signal.h>
 
 #include "glusterfs.h"
 #include "xlator.h"
@@ -184,6 +185,35 @@ init (xlator_t *this)
         this->private = NULL;
  error_return:
         return -1;
+}
+
+
+int
+notify (xlator_t *this, int event, void *data, ...)
+{
+        br_stub_private_t *priv = NULL;
+
+        if (!this)
+                return 0;
+
+        priv = this->private;
+        if (!priv)
+                return 0;
+
+        switch (event) {
+        case GF_EVENT_CLEANUP:
+                if (priv->signth) {
+                        (void) gf_thread_cleanup_xint (priv->signth);
+                        priv->signth = 0;
+                }
+                if (priv->container.thread) {
+                        (void) gf_thread_cleanup_xint (priv->container.thread);
+                        priv->container.thread = 0;
+                }
+                break;
+        }
+        default_notify (this, event, data);
+        return 0;
 }
 
 void
@@ -768,6 +798,7 @@ br_stub_signth (void *arg)
 
         THIS = this;
         while (1) {
+
                 pthread_mutex_lock (&priv->lock);
                 {
                         while (list_empty (&priv->squeue))
