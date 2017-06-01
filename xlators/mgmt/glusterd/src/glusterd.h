@@ -200,6 +200,7 @@ typedef enum gf_brick_status {
         GF_BRICK_STOPPED,
         GF_BRICK_STARTED,
         GF_BRICK_STOPPING,
+        GF_BRICK_STARTING
 } gf_brick_status_t;
 
 struct glusterd_brickinfo {
@@ -232,7 +233,6 @@ struct glusterd_brickinfo {
          */
         uint16_t           group;
         uuid_t             jbr_uuid;
-        gf_boolean_t       started_here;
 };
 
 typedef struct glusterd_brickinfo glusterd_brickinfo_t;
