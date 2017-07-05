@@ -903,4 +903,6 @@ gf_fop_string (glusterfs_fop_t fop);
 char *
 get_ip_from_addrinfo (struct addrinfo *addr, char **ip);
 
+int
+gf_getgrouplist (const char *user, gid_t group, gid_t **groups);
 #endif /* _COMMON_UTILS_H */
