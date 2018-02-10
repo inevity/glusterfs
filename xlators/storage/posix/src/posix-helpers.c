@@ -1943,6 +1943,7 @@ abort:
                         gf_log (THIS->name, GF_LOG_INFO, "detaching not-only "
                                 " child %s", priv->base_path);
                         top->notify (top, GF_EVENT_CLEANUP, victim);
+                        xlator_mem_cleanup (victim);
                 }
         }
 

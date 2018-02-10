@@ -1381,20 +1381,7 @@ cleanup_and_exit (int signum)
         }
 #endif
 
-        /* call fini() of each xlator */
-
-        /*call fini for glusterd xlator */
-        /* TODO : Invoke fini for rest of the xlators */
         trav = NULL;
-        if (ctx->active)
-                trav = ctx->active->top;
-        while (trav) {
-                if (should_call_fini(ctx,trav)) {
-                        THIS = trav;
-                        trav->fini (trav);
-                }
-                trav = trav->next;
-        }
 
         exit(signum);
 }

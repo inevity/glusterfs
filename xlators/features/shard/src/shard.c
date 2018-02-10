@@ -4989,6 +4989,10 @@ shard_forget (xlator_t *this, inode_t *inode)
         uint64_t            ctx_uint = 0;
         shard_inode_ctx_t  *ctx      = NULL;
 
+        priv = this->private;
+        if (!priv)
+                return 0;
+
         inode_ctx_del (inode, this, &ctx_uint);
         if (!ctx_uint)
                 return 0;
