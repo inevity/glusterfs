@@ -280,6 +280,66 @@ else
         CFLAGS="${CFLAGS} -g -rdynamic"
 fi
 
+AC_ARG_ENABLE([asan],
+              AC_HELP_STRING([--enable-asan],
+                             [Enable Address Sanitizer support]))
+if test "x$enable_asan" = "xyes"; then
+        BUILD_ASAN=yes
+        AC_CHECK_LIB([asan], [__asan_init], ,
+                [AC_MSG_ERROR([libasan.so not found, this is required for --enable-asan])])
+        GF_CFLAGS="${GF_CFLAGS} -O1 -g -fsanitize=address -fno-omit-frame-pointer"
+        dnl -lasan always need to be the first library, otherwise libxml complains
+        GF_LDFLAGS="-lasan ${GF_LDFLAGS}"
+else
+        BUILD_ASAN=no
+fi
+
+
+dnl When possible, prefer libtirpc over glibc rpc.
+dnl
+dnl On newer linux with only libtirpc, use libtirpc. (Specifying
+dnl --without-libtirpc is an error.)
+dnl
+dnl on older linux with glibc rpc and WITH libtirpc, use libtirpc
+dnl by default except when configured with --without-libtirpc.
+dnl
+dnl on old linux with glibc rpc and WITHOUT libtirpc, default to
+dnl use glibc rpc.
+dnl
+AC_ARG_WITH([libtirpc],
+        [AC_HELP_STRING([--without-libtirpc], [Use legacy glibc RPC.])],
+        [with_libtirpc="no"], [with_libtirpc="yes"])
+
+dnl ipv6-default is off by default
+dnl
+dnl ipv6-default requires libtirpc. (glibc rpc does not support IPv6.)
+dnl ipv6-default can only be enabled if libtipc is enabled.
+dnl
+AC_ARG_WITH([ipv6-default],
+        AC_HELP_STRING([--with-ipv6-default], [Set IPv6 as default.]),
+        [with_ipv6_default=${with_libtirpc}], [with_ipv6_default="no"])
+
+AC_CHECK_FILE([/etc/centos-release])
+if test "x$ac_cv_file__etc_centos_release" = "xyes"; then
+        if grep "release 6" /etc/centos-release; then
+                with_ipv6_default="no"
+        fi
+fi
+
+dnl On some distributions '-ldl' isn't automatically added to LIBS
+AC_CHECK_LIB([dl], [dlopen], [LIB_DL=-ldl])
+AC_SUBST(LIB_DL)
+
+AC_ARG_ENABLE([privport_tracking],
+              AC_HELP_STRING([--disable-privport_tracking],
+                             [Disable internal tracking of privileged ports.]))
+TRACK_PRIVPORTS="yes"
+if test x"$enable_privport_tracking" = x"no"; then
+        TRACK_PRIVPORTS="no"
+        AC_DEFINE(GF_DISABLE_PRIVPORT_TRACKING, 1,
+                  [Disable internal tracking of privileged ports.])
+fi
+
 
 case $host_os in
   darwin*)
@@ -994,7 +1054,7 @@ fi
 AC_SUBST(GF_DISTRIBUTION)
 
 GF_HOST_OS=""
-GF_LDFLAGS="-rdynamic"
+GF_LDFLAGS="${GF_LDFLAGS} -rdynamic"
 
 dnl check for gcc -Werror=format-security
 saved_CFLAGS=$CFLAGS
@@ -1108,7 +1168,7 @@ case $host_os in
         GF_FUSE_CFLAGS="-DFUSERMOUNT_DIR=\\\"\$(sbindir)\\\""
         GF_LDADD="${ARGP_STANDALONE_LDADD}"
         if test "x$ac_cv_header_execinfo_h" = "xyes"; then
-           GF_LDFLAGS="-lexecinfo"
+           GF_LDFLAGS="${GF_LDFLAGS} -lexecinfo"
         fi
         GF_FUSE_LDADD="-lperfuse"
         BUILD_FUSE_CLIENT=yes
@@ -1129,7 +1189,7 @@ case $host_os in
         GF_FUSE_CFLAGS="-DFUSERMOUNT_DIR=\\\"\$(sbindir)\\\""
         GF_LDADD="${ARGP_STANDALONE_LDADD}"
         if test "x$ac_cv_header_execinfo_h" = "xyes"; then
-           GF_LDFLAGS="-lexecinfo"
+           GF_LDFLAGS="${GF_LDFLAGS} -lexecinfo"
         fi
         BUILD_FUSE_CLIENT=yes
         BUILD_FUSERMOUNT=no
@@ -1144,8 +1204,8 @@ case $host_os in
         GF_CFLAGS="${GF_CFLAGS} -D_DARWIN_USE_64_BIT_INODE "
         GF_CFLAGS="${GF_CFLAGS} -DTHREAD_UNSAFE_BASENAME"
         GF_CFLAGS="${GF_CFLAGS} -DTHREAD_UNSAFE_DIRNAME"
-        GF_LDADD="${ARGP_STANDALONE_LDADD}"
-        GF_LDFLAGS=""
+        GF_LDADD="${ARGP_LDADD}"
+        GF_LDFLAGS="${GF_LDFLAGS}"
         GF_FUSE_CFLAGS="-I\$(CONTRIBDIR)/macfuse"
         BUILD_FUSERMOUNT="no"
         FUSERMOUNT_SUBDIR=""
@@ -1470,6 +1530,7 @@ echo "readline             : $BUILD_READLINE"
 echo "georeplication       : $BUILD_SYNCDAEMON"
 echo "Linux-AIO            : $BUILD_LIBAIO"
 echo "Enable Debug         : $BUILD_DEBUG"
+echo "Enable ASAN          : $BUILD_ASAN"
 echo "Block Device xlator  : $BUILD_BD_XLATOR"
 echo "Use syslog           : $USE_SYSLOG"
 echo "XML output           : $BUILD_XML_OUTPUT"
