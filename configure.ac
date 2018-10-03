@@ -129,12 +129,6 @@ AC_CONFIG_FILES([Makefile
                 xlators/features/changelog/lib/src/Makefile
                 xlators/features/changetimerecorder/Makefile
                 xlators/features/changetimerecorder/src/Makefile
-                xlators/features/glupy/Makefile
-                xlators/features/glupy/examples/Makefile
-                xlators/features/glupy/src/Makefile
-                xlators/features/glupy/src/setup.py
-                xlators/features/glupy/src/__init__.py
-                xlators/features/glupy/src/glupy/Makefile
                 xlators/features/locks/Makefile
                 xlators/features/locks/src/Makefile
                 xlators/features/quota/Makefile
@@ -1245,44 +1239,6 @@ if test "x$LIBAIO" != "x"; then
    BUILD_LIBAIO=yes
 fi
 
-dnl glupy section
-BUILD_GLUPY=no
-
-AC_ARG_ENABLE([glupy], AS_HELP_STRING([--enable-glupy], [build glupy]))
-if test "x$enable_glupy" != "xno"; then enable_glupy=yes; fi
-
-if test "x$enable_glupy" = "xyes"; then
-    GLUPY_SUBDIR=glupy
-    GLUPY_SUBDIR_MAKEFILE=xlators/features/glupy/Makefile
-    GLUPY_SUBDIR_SRC_MAKEFILE=xlators/features/glupy/src/Makefile
-
-    if test "x$have_python2" = "xyes" -a "x$have_Python_h" = "xyes"; then
-        case $host_os in
-            darwin*)
-                BUILD_GLUPY=no
-                ;;
-            *)
-                BUILD_GLUPY=yes
-                ;;
-        esac
-    else
-        AC_MSG_WARN([
-        ---------------------------------------------------------------------------------
-        cannot build glupy. python 2.x and python-devel/python-dev package are required.
-        ---------------------------------------------------------------------------------])
-    fi
-
-    if test "x$BUILD_GLUPY" = "xyes"; then
-
-        echo "building glupy with -isystem $BUILD_PYTHON_INC -l $BUILD_PYTHON_LIB"
-
-        AC_SUBST(GLUPY_SUBDIR)
-        AC_SUBST(GLUPY_SUBDIR_MAKEFILE)
-        AC_SUBST(GLUPY_SUBDIR_SRC_MAKEFILE)
-    fi
-fi
-dnl end glupy section
-
 dnl Check for userspace-rcu
 PKG_CHECK_MODULES([URCU], [liburcu-bp], [],
   [AC_CHECK_HEADERS([urcu-bp.h],
@@ -1503,7 +1459,6 @@ echo "georeplication       : $BUILD_SYNCDAEMON"
 echo "Linux-AIO            : $BUILD_LIBAIO"
 echo "Enable Debug         : $BUILD_DEBUG"
 echo "Block Device xlator  : $BUILD_BD_XLATOR"
-echo "glupy                : $BUILD_GLUPY"
 echo "Use syslog           : $USE_SYSLOG"
 echo "XML output           : $BUILD_XML_OUTPUT"
 echo "Encryption xlator    : $BUILD_CRYPT_XLATOR"
