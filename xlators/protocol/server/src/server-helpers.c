@@ -279,6 +279,7 @@ do_fd_cleanup (xlator_t *this, client_t* client, fdentry_t *fdentries, int fd_co
                                 goto out;
                         }
 
+                        tmp_frame->root->type = GF_OP_TYPE_FOP;
                         GF_ASSERT (fd->inode);
 
                         ret = inode_path (fd->inode, NULL, &path);
@@ -391,6 +392,7 @@ server_alloc_frame (rpcsvc_request_t *req)
         if (!frame)
                 goto out;
 
+        frame->root->type = GF_OP_TYPE_FOP;
         state = GF_CALLOC (1, sizeof (*state), gf_server_mt_state_t);
         if (!state)
                 goto out;
