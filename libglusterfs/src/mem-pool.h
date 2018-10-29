@@ -39,11 +39,11 @@
 #define GF_MEM_INVALID_MAGIC 0xDEADC0DE
 
 struct mem_acct_rec {
-	const char     *typestr;
-        size_t          size;
-        size_t          max_size;
+        const char     *typestr;
+        uint64_t        size;
+        uint64_t        max_size;
         uint32_t        num_allocs;
-        uint32_t        total_allocs;
+        uint64_t        total_allocs;
         uint32_t        max_num_allocs;
         gf_lock_t       lock;
 #ifdef DEBUG
