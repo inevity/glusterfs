@@ -295,51 +295,51 @@ else
 fi
 
 
-dnl When possible, prefer libtirpc over glibc rpc.
-dnl
-dnl On newer linux with only libtirpc, use libtirpc. (Specifying
-dnl --without-libtirpc is an error.)
-dnl
-dnl on older linux with glibc rpc and WITH libtirpc, use libtirpc
-dnl by default except when configured with --without-libtirpc.
-dnl
-dnl on old linux with glibc rpc and WITHOUT libtirpc, default to
-dnl use glibc rpc.
-dnl
-AC_ARG_WITH([libtirpc],
-        [AC_HELP_STRING([--without-libtirpc], [Use legacy glibc RPC.])],
-        [with_libtirpc="no"], [with_libtirpc="yes"])
-
-dnl ipv6-default is off by default
-dnl
-dnl ipv6-default requires libtirpc. (glibc rpc does not support IPv6.)
-dnl ipv6-default can only be enabled if libtipc is enabled.
-dnl
-AC_ARG_WITH([ipv6-default],
-        AC_HELP_STRING([--with-ipv6-default], [Set IPv6 as default.]),
-        [with_ipv6_default=${with_libtirpc}], [with_ipv6_default="no"])
-
-AC_CHECK_FILE([/etc/centos-release])
-if test "x$ac_cv_file__etc_centos_release" = "xyes"; then
-        if grep "release 6" /etc/centos-release; then
-                with_ipv6_default="no"
-        fi
-fi
-
-dnl On some distributions '-ldl' isn't automatically added to LIBS
-AC_CHECK_LIB([dl], [dlopen], [LIB_DL=-ldl])
-AC_SUBST(LIB_DL)
-
-AC_ARG_ENABLE([privport_tracking],
-              AC_HELP_STRING([--disable-privport_tracking],
-                             [Disable internal tracking of privileged ports.]))
-TRACK_PRIVPORTS="yes"
-if test x"$enable_privport_tracking" = x"no"; then
-        TRACK_PRIVPORTS="no"
-        AC_DEFINE(GF_DISABLE_PRIVPORT_TRACKING, 1,
-                  [Disable internal tracking of privileged ports.])
-fi
-
+#dnl When possible, prefer libtirpc over glibc rpc.
+#dnl
+#dnl On newer linux with only libtirpc, use libtirpc. (Specifying
+#dnl --without-libtirpc is an error.)
+#dnl
+#dnl on older linux with glibc rpc and WITH libtirpc, use libtirpc
+#dnl by default except when configured with --without-libtirpc.
+#dnl
+#dnl on old linux with glibc rpc and WITHOUT libtirpc, default to
+#dnl use glibc rpc.
+#dnl
+#AC_ARG_WITH([libtirpc],
+#        [AC_HELP_STRING([--without-libtirpc], [Use legacy glibc RPC.])],
+#        [with_libtirpc="no"], [with_libtirpc="yes"])
+#
+#dnl ipv6-default is off by default
+#dnl
+#dnl ipv6-default requires libtirpc. (glibc rpc does not support IPv6.)
+#dnl ipv6-default can only be enabled if libtipc is enabled.
+#dnl
+#AC_ARG_WITH([ipv6-default],
+#        AC_HELP_STRING([--with-ipv6-default], [Set IPv6 as default.]),
+#        [with_ipv6_default=${with_libtirpc}], [with_ipv6_default="no"])
+#
+#AC_CHECK_FILE([/etc/centos-release])
+#if test "x$ac_cv_file__etc_centos_release" = "xyes"; then
+#        if grep "release 6" /etc/centos-release; then
+#                with_ipv6_default="no"
+#        fi
+#fi
+#
+#dnl On some distributions '-ldl' isn't automatically added to LIBS
+#AC_CHECK_LIB([dl], [dlopen], [LIB_DL=-ldl])
+#AC_SUBST(LIB_DL)
+#
+#AC_ARG_ENABLE([privport_tracking],
+#              AC_HELP_STRING([--disable-privport_tracking],
+#                             [Disable internal tracking of privileged ports.]))
+#TRACK_PRIVPORTS="yes"
+#if test x"$enable_privport_tracking" = x"no"; then
+#        TRACK_PRIVPORTS="no"
+#        AC_DEFINE(GF_DISABLE_PRIVPORT_TRACKING, 1,
+#                  [Disable internal tracking of privileged ports.])
+#fi
+#
 
 case $host_os in
   darwin*)
