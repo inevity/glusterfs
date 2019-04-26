@@ -7,7 +7,7 @@ dnl  later), or the GNU General Public License, version 2 (GPLv2), in all
 dnl  cases as published by the Free Software Foundation.
 
 AC_INIT([glusterfs],
-        [m4_esyscmd([build-aux/pkg-version --version])],
+        [m4_esyscmd([build-aux/pkg-version --full])],
         [gluster-users@gluster.org],,[https://github.com/gluster/glusterfs.git])
 
 AC_SUBST([PACKAGE_RELEASE],
