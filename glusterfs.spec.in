@@ -96,7 +96,7 @@
 %endif
 
 # From https://fedoraproject.org/wiki/Packaging:Python#Macros
-%if ( 0%{?rhel} && 0%{?rhel} <= 5 )
+%if ( 0%{?rhel} && 0%{?rhel} <= 6 )
 %{!?python2_sitelib: %global python2_sitelib %(python2 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 %{!?python2_sitearch: %global python2_sitearch %(python2 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
@@ -1103,13 +1103,8 @@ exit 0
 %files -n python2-gluster
 # introducing glusterfs module in site packages.
 # so that all other gluster submodules can reside in the same namespace.
-%if ( %{_usepython3} )
-%dir %{python3_sitelib}/gluster
-     %{python3_sitelib}/gluster/cliutils
-%else
 %dir %{python2_sitelib}/gluster
      %{python2_sitelib}/gluster/cliutils
-%endif
 
 %if ( 0%{!?_without_rdma:1} )
 %files rdma
