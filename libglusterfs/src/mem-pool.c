@@ -582,7 +582,7 @@ mem_pools_init_late (void)
         pthread_mutex_lock (&init_mutex);
         if ((init_count++) == 0) {
                 (void) gf_thread_create (&sweeper_tid, NULL, pool_sweeper,
-                                         NULL, "memsweep");
+                                         NULL);
 
                 init_done = GF_MEMPOOL_INIT_LATE;
         }
