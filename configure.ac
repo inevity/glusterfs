@@ -7,7 +7,7 @@ dnl  later), or the GNU General Public License, version 2 (GPLv2), in all
 dnl  cases as published by the Free Software Foundation.
 
 AC_INIT([glusterfs],
-        [m4_esyscmd([build-aux/pkg-version --full])],
+        [m4_esyscmd([build-aux/pkg-version --version])],
         [gluster-users@gluster.org],,[https://github.com/gluster/glusterfs.git])
 
 AC_SUBST([PACKAGE_RELEASE],
@@ -286,6 +286,7 @@ AC_ARG_ENABLE([asan],
 if test "x$enable_asan" = "xyes"; then
         BUILD_ASAN=yes
         AC_CHECK_LIB([asan], [__asan_init], ,
+        #AC_CHECK_LIB([asan], [__asan_report_error], ,
                 [AC_MSG_ERROR([libasan.so not found, this is required for --enable-asan])])
         GF_CFLAGS="${GF_CFLAGS} -O1 -g -fsanitize=address -fno-omit-frame-pointer"
         dnl -lasan always need to be the first library, otherwise libxml complains

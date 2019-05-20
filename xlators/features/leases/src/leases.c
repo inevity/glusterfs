@@ -1077,10 +1077,7 @@ fini (xlator_t *this)
         }
 
         GF_FREE (priv);
-        if (this->ctx->tw) {
-                glusterfs_ctx_tw_put (this->ctx);
-                this->ctx->tw = NULL;
-        }
+        // see core: make the per glusterfs_ctx_t timer-wheel refcounted
         return 0;
 }
 

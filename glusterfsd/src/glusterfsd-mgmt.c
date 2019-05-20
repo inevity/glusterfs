@@ -320,7 +320,7 @@ glusterfs_handle_terminate (rpcsvc_request_t *req)
                          */
                         gf_log (THIS->name, GF_LOG_INFO, "detaching not-only"
                                 " child %s", xlator_req.name);
-                        top->notify (top, GF_EVENT_TRANSPORT_CLEANUP, victim);
+                        top->notify (top, GF_EVENT_CLEANUP, victim);
                         glusterfs_mgmt_pmap_signout (glusterfsd_ctx,
                                                      xlator_req.name);
 
