@@ -247,8 +247,6 @@ gf_proc_dump_xlator_mem_info (xlator_t *xl)
                                     xl->mem_acct->rec[i].max_size);
                 gf_proc_dump_write ("max_num_allocs", "%u",
                                     xl->mem_acct->rec[i].max_num_allocs);
-                gf_proc_dump_write ("total_allocs", "%u",
-                                    xl->mem_acct->rec[i].total_allocs);
                 gf_proc_dump_write("total_allocs", "%" PRIu64,
                                     xl->mem_acct->rec[i].total_allocs);
         }
