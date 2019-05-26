@@ -210,7 +210,7 @@ Requires:         %{name}-libs%{?_isa} = %{version}-%{release}
 %{?systemd_requires}
 %endif
 %if 0%{?_with_asan:1} && !( 0%{?rhel} && 0%{?rhel} < 5 )
-BuildRequires:    libasan5
+BuildRequires:    libasan5 devtoolset-8-libasan-devel
 %endif
 BuildRequires:    bison flex
 BuildRequires:    gcc make libtool
