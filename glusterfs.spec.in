@@ -1,3 +1,7 @@
+
+%if 0%{?rhel} > 5
+BuildRequires:  devtoolset-8-toolchain devtoolset-8-libatomic-devel
+%endif
 %global _hardened_build 1
 
 %global _for_fedora_koji_builds 0
@@ -37,6 +41,9 @@
 %ifarch s390 s390x
 %global _without_rdma --disable-ibverbs
 %endif
+
+%{?_without_xmltest:%global _without_xmltest --disable-xmltest}
+
 
 # if you wish to compile an rpm without epoll...
 # rpmbuild -ta @PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz --without epoll
@@ -105,6 +112,10 @@
 # Eventing
 %if ( 0%{?rhel} && 0%{?rhel} < 6 )
 %global _without_events --disable-events
+%endif
+
+%if 0%{?_with_asan:1} && !( 0%{?rhel} && 0%{?rhel} < 5 )
+BuildRequires:    libasan5 devtoolset-8-libasan-devel
 %endif
 
 # From https://fedoraproject.org/wiki/Packaging:Python#Macros
@@ -678,6 +689,7 @@ export CFLAGS
         %{?_with_firewalld} \
         %{?_without_ocf} \
         %{?_without_rdma} \
+        %{?_without_xmltest} \
         %{?_without_syslog} \
         %{?_without_tiering} \
         %{?_without_events}
@@ -696,6 +708,9 @@ make check
 
 %install
 rm -rf %{buildroot}
+%if 0%{?rhel}
+. /opt/rh/devtoolset-8/enable
+%endif
 make install DESTDIR=%{buildroot}
 # Install include directory
 install -p -m 0644 contrib/uuid/*.h \
