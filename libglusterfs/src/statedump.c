@@ -297,6 +297,8 @@ void
 gf_proc_dump_mem_info ()
 {
 #ifdef HAVE_MALLOC_STATS
+        malloc_stats();
+
         struct mallinfo info;
 
         memset (&info, 0, sizeof (struct mallinfo));
